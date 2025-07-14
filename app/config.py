@@ -1,38 +1,3 @@
-# from pydantic_settings import BaseSettings
-# import os
-
-# class Settings(BaseSettings):
-#     # Database Configuration
-#     SQLALCHEMY_DATABASE_URL: str = "postgresql://postgres:admin@localhost:5432/my_hrms_db"
-    
-#     # Authentication
-#     SECRET_KEY: str = "super-secret-fastapi-key-1255"
-#     ALGORITHM: str = "HS256"
-#     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    
-#     # Email Settings
-#     email_host: str = "smtp.gmail.com"
-#     email_port: int = 465
-#     email_use_ssl: bool = True
-#     email_user: str = "syedjawadali92@gmail.com"
-#     email_password: str = "ctpgxfclwyucweni"
-#     admin_email: str = "syedjawadali92@gmail.com"
-    
-#     # Redis Settings
-#     redis_host: str = "localhost"
-#     redis_port: int = 6379
-#     redis_db: int = 0
-#     redis_cache_ttl: int = 300
-    
-#     class Config:
-#         env_file = ".env"
-#         env_file_encoding = 'utf-8'
-
-# settings = Settings()
-# print(f"CONFIRMED DATABASE URL: {settings.SQLALCHEMY_DATABASE_URL}")
-
-
-
 from pydantic_settings import BaseSettings
 from pydantic import Field, AnyUrl, validator
 from typing import Optional
