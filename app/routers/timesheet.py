@@ -90,13 +90,13 @@ def get_timesheet(id: int, db: Session = Depends(database.get_db),
 @router.patch("/{id}", response_model=schemas.Timesheet)
 def patch_update_timesheet(
     id: int,
-    updated_timesheet: schemas.AttendanceUpdate,
+    updated_timesheet: schemas.TimesheetUpdate,
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(oauth2.get_current_user)
 ):
     try:
 
-        timesheet_instance = db.query(models.Attendance).filter(models.Attendance.id == id).first()
+        timesheet_instance = db.query(models.Timesheet).filter(models.Timesheet.id == id).first()
 
         if not timesheet_instance:
             raise HTTPException(
