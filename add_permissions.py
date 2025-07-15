@@ -32,16 +32,26 @@ permissions = [
     {"name": "Read Notification", "code": "read_notification", "module_name": "Notification", "description": "User can read Notification"},
     {"name": "Update Notification", "code": "update_notification", "module_name": "Notification", "description": "User can update Notification"},
     {"name": "Delete Notification", "code": "delete_notification", "module_name": "Notification", "description": "User can delete Notification"},
-    
-        # {"name": "Create Booking", "code": "create_booking", "module_name": "Booking", "description": "User can create Booking"},
-    # {"name": "Read Booking", "code": "read_booking", "module_name": "Booking", "description": "User can read Booking"},
-    # {"name": "Update Booking", "code": "update_booking", "module_name": "Booking", "description": "User can update Booking"},
-    # {"name": "Delete Booking", "code": "delete_booking", "module_name": "Booking", "description": "User can delete Booking"},
 
-    # {"name": "Create Images", "code": "create_images", "module_name": "Images", "description": "User can create Images"},
-    # {"name": "Read Images", "code": "read_images", "module_name": "Images", "description": "User can read Images"},
-    # {"name": "Update Images", "code": "update_images", "module_name": "Images", "description": "User can update Images"},
-    # {"name": "Delete Images", "code": "delete_images", "module_name": "Images", "description": "User can delete Images"},
+    {"name": "Create Employee Salary", "code": "create_employee_salary", "module_name": "Employee Salary", "description": "User can create Employee Salary"},
+    {"name": "Read Employee Salary", "code": "read_employee_salary", "module_name": "Employee Salary", "description": "User can read Employee Salary"},
+    {"name": "Update Employee Salary", "code": "update_employee_salary", "module_name": "Employee Salary", "description": "User can update Employee Salary"},
+    {"name": "Delete Employee Salary", "code": "delete_employee_salary", "module_name": "Employee Salary", "description": "User can delete Employee Salary"},
+
+    {"name": "Create Salary Structure", "code": "create_salary_structure", "module_name": "Salary Structure", "description": "User can create Salary Structure"},
+    {"name": "Read Salary Structure", "code": "read_salary_structure", "module_name": "Salary Structure", "description": "User can read Salary Structure"},
+    {"name": "Update Salary Structure", "code": "update_salary_structure", "module_name": "Salary Structure", "description": "User can update Salary Structure"},
+    {"name": "Delete Salary Structure", "code": "delete_salary_structure", "module_name": "Salary Structure", "description": "User can delete Salary Structure"},
+
+    {"name": "Create Payslip", "code": "create_payslip", "module_name": "Payslip", "description": "User can create Payslip"},
+    {"name": "Read Payslip", "code": "read_payslip", "module_name": "Payslip", "description": "User can read Payslip"},
+    {"name": "Update Payslip", "code": "update_payslip", "module_name": "Payslip", "description": "User can update Payslip"},
+    {"name": "Delete Payslip", "code": "delete_payslip", "module_name": "Payslip", "description": "User can delete Payslip"},
+
+    {"name": "Create Salary History", "code": "create_salary_history", "module_name": "Salary History", "description": "User can create Salary History"},
+    {"name": "Read Salary History", "code": "read_salary_history", "module_name": "Salary History", "description": "User can read Salary History"},
+    {"name": "Update Salary History", "code": "update_salary_history", "module_name": "Salary History", "description": "User can update Salary History"},
+    {"name": "Delete Salary History", "code": "delete_salary_history", "module_name": "Salary History", "description": "User can delete Salary History"},
 ]
 
 

@@ -1,5 +1,7 @@
 from fastapi import HTTPException
 from passlib.context import CryptContext
+from datetime import datetime
+from app import models
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -161,6 +163,53 @@ def filter_leave(params: dict, query: Query):
 
     return query
 
+
+
+def filter_employee_salaries(params, query):
+    employee_id = params.get("employee_id")
+    salary_month = params.get("salary_month")  # Format: YYYY-MM
+    payment_status = params.get("payment_status")
+    department_id = params.get("department_id")
+    rank_id = params.get("rank_id")
+
+    # Filter by employee_id
+    if employee_id:
+        try:
+            query = query.filter(models.EmployeeSalary.employee_id == int(employee_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid employee_id. Must be an integer.")
+
+    # Filter by salary_month (YYYY-MM)
+    if salary_month:
+        try:
+            salary_month_date = datetime.strptime(salary_month, "%Y-%m")
+            query = query.filter(models.EmployeeSalary.salary_month == salary_month_date.date())
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid salary_month format. Use YYYY-MM.")
+
+    # Filter by payment_status
+    if payment_status:
+        allowed_statuses = ["pending", "paid", "cancelled"]
+        if payment_status.lower() in allowed_statuses:
+            query = query.filter(models.EmployeeSalary.payment_status == payment_status.lower())
+        else:
+            raise HTTPException(status_code=400, detail=f"Invalid payment_status. Allowed: {allowed_statuses}")
+
+    # Filter by department_id
+    if department_id:
+        try:
+            query = query.filter(models.EmployeeSalary.department_id == int(department_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid department_id. Must be an integer.")
+
+    # Filter by rank_id
+    if rank_id:
+        try:
+            query = query.filter(models.EmployeeSalary.rank_id == int(rank_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid rank_id. Must be an integer.")
+
+    return query
 
 
 from fastapi.responses import JSONResponse
