@@ -11,6 +11,34 @@ router = APIRouter(
     tags=['Notifications']
 )
 
+@router.get("/all", response_model=schemas.NotificationListResponse)
+def get_all_notifications_for_admin(
+    request: Request,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(oauth2.get_current_user)
+):
+    """Get all notifications of all users — Superuser only."""
+    if not current_user.is_superuser:
+        raise HTTPException(status_code=403, detail="Access forbidden: Superusers only")
+
+    try:
+        query = db.query(models.Notification).order_by(models.Notification.created_at.desc())
+        all_data = query.all()
+        paginated_data, count = paginate_data(all_data, request)
+
+        return {
+            "status": "success",
+            "result": {
+                "count": count,
+                "data": paginated_data
+            }
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error retrieving notifications: {str(e)}")
+
+
+
 # ✅ GET: All Notifications (Paginated)
 @router.get("/", response_model=schemas.NotificationListResponse)
 def get_notifications(
