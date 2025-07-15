@@ -15,4 +15,7 @@ class Rank(Base):
     # Relationships
     department = relationship("Department", back_populates="ranks")
     employees = relationship("Employee", back_populates="rank")
-    creator = relationship("User", back_populates="created_ranks") 
+    creator = relationship("User", back_populates="created_ranks")
+    employee_salaries = relationship("EmployeeSalary", back_populates="rank")
+    salary_structures = relationship("SalaryStructure", back_populates="rank")
+    payslips = relationship("Payslip", back_populates="rank") 

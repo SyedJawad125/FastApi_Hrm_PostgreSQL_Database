@@ -22,6 +22,10 @@ if config.config_file_name is not None:
 # Import your Base and models
 from app.models.user import User
 from app.database import Base  # where Base = declarative_base()
+from app.models.salary_structure import SalaryStructure
+from app.models.employee_salary import EmployeeSalary
+from app.models.payslip import Payslip
+from app.models.salary_history import SalaryHistory
 
 # Set metadata
 target_metadata = Base.metadata

@@ -19,12 +19,17 @@ from app.models.attendance import Attendance
 from app.models.timesheet import Timesheet
 from app.models.leave import Leave
 from app.models.notification import Notification
+from app.models.employee_salary import EmployeeSalary
+from app.models.salary_structure import SalaryStructure
+from app.models.payslip import Payslip
+from app.models.salary_history import SalaryHistory
 
 # Import routers
 from app.routers import (
     employee, department, auth, user, 
     role, permission, rank, attendance, 
-    timesheet, leave, notification
+    timesheet, leave, notification, employee_salary,
+    salary_structure, payslip, salary_history
 )
 
 app = FastAPI(
@@ -80,6 +85,12 @@ app.include_router(attendance.router)
 app.include_router(timesheet.router)
 app.include_router(leave.router)
 app.include_router(notification.router)
+app.include_router(employee_salary.router)
+app.include_router(salary_structure.router)
+app.include_router(payslip.router)
+app.include_router(salary_history.router)
+
+
 
 @app.on_event("startup")
 def startup_event():

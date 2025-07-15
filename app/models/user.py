@@ -33,3 +33,12 @@ class User(Base):
     notifications = relationship("Notification", back_populates="user", foreign_keys="Notification.user_id")
 
     permissions = relationship("Permission",secondary=user_permission,back_populates="users")
+    
+    # Add relationship for created employee salaries
+    created_employee_salaries = relationship("EmployeeSalary", back_populates="creator")
+    created_salary_structures = relationship("SalaryStructure", back_populates="creator")
+    created_salary_histories = relationship("SalaryHistory", back_populates="creator")
+    
+    # Add relationships for created and approved payslips
+    created_payslips = relationship("Payslip", back_populates="creator", foreign_keys="Payslip.created_by_user_id")
+    approved_payslips = relationship("Payslip", back_populates="approver", foreign_keys="Payslip.approved_by_user_id")

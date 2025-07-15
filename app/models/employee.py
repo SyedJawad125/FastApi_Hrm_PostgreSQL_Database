@@ -26,3 +26,11 @@ class Employee(Base):
     # Add relationships for attendance and timesheet
     attendances = relationship("Attendance", back_populates="employee")
     timesheets = relationship("Timesheet", back_populates="employee")
+    
+    # Add relationships for salary management
+    salaries = relationship("EmployeeSalary", back_populates="employee")
+    salary_structures = relationship("SalaryStructure", back_populates="employee")
+    salary_histories = relationship("SalaryHistory", back_populates="employee")
+    
+    # Add relationship for payslips
+    payslips = relationship("Payslip", back_populates="employee")

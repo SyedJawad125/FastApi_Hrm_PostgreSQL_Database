@@ -93,7 +93,37 @@ from .notification import (
     PaginatedNotifications,
     NotificationListResponse
 )
-
+from .employee_salary import (
+    EmployeeSalaryBase,
+    EmployeeSalaryCreate,
+    EmployeeSalaryUpdate,
+    EmployeeSalaryOut,
+    EmployeeSalaryListResponse
+)
+from .salary_structure import (
+    PaymentFrequency,
+    SalaryStructureBase,
+    SalaryStructureCreate,
+    SalaryStructureUpdate,
+    SalaryStructureOut,
+    SalaryStructureListResponse
+) 
+from .payslip import (
+    PayslipStatus,
+    PayslipBase,
+    PayslipCreate,
+    PayslipUpdate,
+    PayslipOut,
+    PayslipListResponse
+)
+from .salary_history import (
+    ChangeType,
+    SalaryHistoryBase,
+    SalaryHistoryCreate,
+    SalaryHistoryUpdate,
+    SalaryHistoryOut,
+    SalaryHistoryListResponse
+)
 # define what will be exported on `from schemas import *`
 __all__ = [
     'UserBase', 'UserCreate', 'LoginRequest', 'UserUpdate', 'UserOut',
@@ -110,6 +140,9 @@ __all__ = [
     'PermissionBase', 'PermissionCreate' ,'PermissionUpdate','Permission', 'PaginatedPermissions', 'PermissionListResponse',
     'RoleBase', 'RoleCreate', 'RoleUpdate', 'Role', 'PaginatedRoles', 'RoleListResponse',
     'NotificationBase', 'NotificationCreate', 'NotificationUpdate', 'Notification', 'NotificationResponse', 'PaginatedNotifications', 'NotificationListResponse',
-
+    'EmployeeSalaryBase', 'EmployeeSalaryCreate', 'EmployeeSalaryUpdate', 'EmployeeSalaryOut', 'EmployeeSalaryListResponse',
+    'PaymentFrequency', 'SalaryStructureBase', 'SalaryStructureCreate', 'SalaryStructureUpdate', 'SalaryStructureOut', 'SalaryStructureListResponse',
+    'PayslipStatus', 'PayslipBase', 'PayslipCreate', 'PayslipUpdate', 'PayslipOut', 'PayslipListResponse',
+    'ChangeType', 'SalaryHistoryBase', 'SalaryHistoryCreate', 'SalaryHistoryUpdate', 'SalaryHistoryOut', 'SalaryHistoryListResponse'
 ]
 
