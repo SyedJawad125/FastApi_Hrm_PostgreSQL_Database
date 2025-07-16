@@ -212,6 +212,7 @@ def filter_employee_salaries(params, query):
     return query
 
 
+from app.models.salary_history import ChangeType  # adjust this path if needed
 
 def filter_salary_histories(params, query: Query):
     employee_id = params.get("employee_id")
@@ -251,7 +252,7 @@ def filter_salary_histories(params, query: Query):
 
     # Filter by change_type
     if change_type:
-        valid_types = [e.value for e in models.ChangeType]
+        valid_types = [e.value for e in ChangeType]
         if change_type.lower() in valid_types:
             query = query.filter(models.SalaryHistory.change_type == change_type.lower())
         else:
@@ -273,6 +274,149 @@ def filter_salary_histories(params, query: Query):
 
     return query
 
+
+from app.models.payslip import PayslipStatus
+
+def filter_payslips(params, query: Query):
+    payslip_number = params.get("payslip_number")
+    employee_id = params.get("employee_id")
+    department_id = params.get("department_id")
+    rank_id = params.get("rank_id")
+    status = params.get("status")
+    payment_method = params.get("payment_method")
+    pay_period_start = params.get("pay_period_start")  # format: YYYY-MM-DD
+    pay_period_end = params.get("pay_period_end")      # format: YYYY-MM-DD
+    payment_date = params.get("payment_date")          # format: YYYY-MM-DD
+
+    # Filter by payslip_number
+    if payslip_number:
+        query = query.filter(models.Payslip.payslip_number.ilike(f"%{payslip_number}%"))
+
+    # Filter by employee_id
+    if employee_id:
+        try:
+            query = query.filter(models.Payslip.employee_id == int(employee_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid employee_id. Must be an integer.")
+
+    # Filter by department_id
+    if department_id:
+        try:
+            query = query.filter(models.Payslip.department_id == int(department_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid department_id. Must be an integer.")
+
+    # Filter by rank_id
+    if rank_id:
+        try:
+            query = query.filter(models.Payslip.rank_id == int(rank_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid rank_id. Must be an integer.")
+
+    # Filter by status (DRAFT, GENERATED, etc.)
+    if status:
+        valid_statuses = [e.value for e in PayslipStatus]
+        if status.lower() in valid_statuses:
+            query = query.filter(models.Payslip.status == status.lower())
+        else:
+            raise HTTPException(status_code=400, detail=f"Invalid status. Allowed: {valid_statuses}")
+
+    # Filter by payment method
+    if payment_method:
+        query = query.filter(models.Payslip.payment_method.ilike(f"%{payment_method}%"))
+
+    # Filter by pay_period_start (exact match)
+    if pay_period_start:
+        try:
+            date_obj = datetime.strptime(pay_period_start, "%Y-%m-%d").date()
+            query = query.filter(models.Payslip.pay_period_start == date_obj)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid pay_period_start format. Use YYYY-MM-DD.")
+
+    # Filter by pay_period_end (exact match)
+    if pay_period_end:
+        try:
+            date_obj = datetime.strptime(pay_period_end, "%Y-%m-%d").date()
+            query = query.filter(models.Payslip.pay_period_end == date_obj)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid pay_period_end format. Use YYYY-MM-DD.")
+
+    # Filter by payment_date (exact match)
+    if payment_date:
+        try:
+            date_obj = datetime.strptime(payment_date, "%Y-%m-%d").date()
+            query = query.filter(models.Payslip.payment_date == date_obj)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid payment_date format. Use YYYY-MM-DD.")
+
+    return query
+
+
+from app.models.salary_structure import PaymentFrequency
+
+def filter_salary_structures(params, query: Query):
+    employee_id = params.get("employee_id")
+    rank_id = params.get("rank_id")
+    department_id = params.get("department_id")
+    payment_frequency = params.get("payment_frequency")
+    effective_date = params.get("effective_date")  # format: YYYY-MM-DD
+    end_date = params.get("end_date")              # format: YYYY-MM-DD
+
+    # ✅ Filter by employee_id
+    if employee_id:
+        try:
+            query = query.filter(models.SalaryStructure.employee_id == int(employee_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid employee_id. Must be an integer.")
+
+    # ✅ Filter by rank_id
+    if rank_id:
+        try:
+            query = query.filter(models.SalaryStructure.rank_id == int(rank_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid rank_id. Must be an integer.")
+
+    # ✅ Filter by department_id
+    if department_id:
+        try:
+            query = query.filter(models.SalaryStructure.department_id == int(department_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid department_id. Must be an integer.")
+
+    # ✅ Filter by payment_frequency
+    if payment_frequency:
+        valid_frequencies = [f.value for f in PaymentFrequency]
+        if payment_frequency.lower() in valid_frequencies:
+            query = query.filter(models.SalaryStructure.payment_frequency == payment_frequency.lower())
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid payment_frequency. Allowed: {valid_frequencies}"
+            )
+
+    # ✅ Filter by effective_date (exact match)
+    if effective_date:
+        try:
+            date_obj = datetime.strptime(effective_date, "%Y-%m-%d").date()
+            query = query.filter(models.SalaryStructure.effective_date == date_obj)
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid effective_date format. Use YYYY-MM-DD."
+            )
+
+    # ✅ Filter by end_date (exact match)
+    if end_date:
+        try:
+            date_obj = datetime.strptime(end_date, "%Y-%m-%d").date()
+            query = query.filter(models.SalaryStructure.end_date == date_obj)
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid end_date format. Use YYYY-MM-DD."
+            )
+
+    return query
 
 
 def filter_permissions(params, query):

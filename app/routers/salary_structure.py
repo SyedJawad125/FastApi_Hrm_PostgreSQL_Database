@@ -19,6 +19,8 @@ def get_salary_structures(
 ):
     try:
         query = db.query(models.SalaryStructure)
+        query = filter_salary_structures(request.query_params, query)
+
         data = query.all()
         paginated_data, count = paginate_data(data, request)
 

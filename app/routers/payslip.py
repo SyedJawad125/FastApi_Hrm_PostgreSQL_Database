@@ -19,6 +19,8 @@ def get_payslips(
 ):
     try:
         query = db.query(models.Payslip)
+        query = filter_payslips(request.query_params, query)
+
         data = query.all()
         paginated_data, count = paginate_data(data, request)
         serialized_data = [schemas.PayslipOut.from_orm(item) for item in paginated_data]
