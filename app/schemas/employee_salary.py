@@ -142,12 +142,21 @@ class EmployeeSalaryUpdate(BaseModel):
     class Config:
         from_attributes = True
 
+# ✅ Minimal user schema for creator info
+class UserOut(BaseModel):
+    id: int
+    username: str  # Adjust if you're using "email" or "name" instead
+
+    class Config:
+        orm_mode = True
+
 
 # ✅ Schema for response (GET/POST/PATCH response)
 class EmployeeSalaryOut(EmployeeSalaryBase):
     id: int
     net_salary: float  # ✅ Always shown in response
-    created_by_user_id: int  # ✅ Included in response only
+    creator: Optional[UserOut]  # 👈 Include creator info
+    # created_by_user_id: int  # ✅ Included in response only
     created_at: datetime
     updated_at: Optional[datetime]
 
