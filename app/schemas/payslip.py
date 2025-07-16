@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, List, Any
+from typing import Optional, Any
 from datetime import date, datetime
 from enum import Enum
 
@@ -12,6 +12,7 @@ class PayslipStatus(str, Enum):
     CANCELLED = "cancelled"
 
 
+# Base schema used for both create and response
 class PayslipBase(BaseModel):
     payslip_number: str
     pay_period_start: date
@@ -39,18 +40,25 @@ class PayslipBase(BaseModel):
     status: PayslipStatus = PayslipStatus.DRAFT
 
     employee_id: int
-    employee_salary_id: int
+    # employee_salary_id: int
     department_id: int
     rank_id: int
-    created_by_user_id: int
+
+    # Not part of creation payload, but allowed in update
     approved_by_user_id: Optional[int] = None
 
 
+# Used in POST request
 class PayslipCreate(PayslipBase):
     pass
 
 
+# Used in PUT/PATCH request
 class PayslipUpdate(BaseModel):
+    payslip_number: Optional[str]
+    pay_period_start: Optional[date]
+    pay_period_end: Optional[date]
+    basic_salary: Optional[float]
     overtime_pay: Optional[float]
     bonus: Optional[float]
     housing_allowance: Optional[float]
@@ -71,21 +79,34 @@ class PayslipUpdate(BaseModel):
     bank_account: Optional[str]
     remarks: Optional[str]
     status: Optional[PayslipStatus]
-    approved_by_user_id: Optional[int]
+
+    approved_by_user_id: Optional[int] = None
+    department_id: Optional[int]
+    rank_id: Optional[int]
+    
+    # employee_salary_id: Optional[int]
 
 
+# Used in response
 class PayslipOut(PayslipBase):
     id: int
+    created_by_user_id: int
+    employee_salary_id: Optional[int]  # visible in response only
     created_at: datetime
     updated_at: Optional[datetime]
 
     class Config:
         orm_mode = True
+        from_attributes = True
 
 
+
+# For paginated or structured list responses
 class PayslipListResponse(BaseModel):
     status: str
-    result: dict[str, Any]
+    result: dict[str, Any]  # e.g. {"count": 25, "data": [PayslipOut, PayslipOut, ...]}
 
     class Config:
         orm_mode = True
+        from_attributes = True
+

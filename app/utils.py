@@ -300,3 +300,11 @@ except RedisError as e:
     print("❌ Redis connection failed:", e)
     redis_client = None
 
+from fastapi import HTTPException
+from sqlalchemy.orm import Query
+
+def get_object_or_404(query: Query, id: int, name: str = "Object"):
+    obj = query.filter_by(id=id).first()
+    if not obj:
+        raise HTTPException(status_code=404, detail=f"{name} with id {id} not found")
+    return obj

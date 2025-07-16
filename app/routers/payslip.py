@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, status, Request, HTTPException
 from sqlalchemy.orm import Session
 from typing import Any
 from .. import database, schemas, models, oauth2
-from app.utils import paginate_data
+from app.utils import paginate_data, get_object_or_404
+from fastapi import Body
 
 router = APIRouter(
     prefix="/payslips",
@@ -58,9 +59,7 @@ def get_payslip(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(oauth2.get_current_user)
 ):
-    payslip = db.query(models.Payslip).filter(models.Payslip.id == id).first()
-    if not payslip:
-        raise HTTPException(status_code=404, detail=f"Payslip with id {id} not found")
+    payslip = get_object_or_404(db.query(models.Payslip), id, "Payslip")
     return payslip
 
 
@@ -68,7 +67,7 @@ def get_payslip(
 @router.patch("/{id}", response_model=schemas.PayslipOut)
 def update_payslip(
     id: int,
-    payslip_data: schemas.PayslipUpdate,
+    payslip_data: schemas.PayslipUpdate = Body(...),  # ✅ fixed
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(oauth2.get_current_user)
 ):
@@ -96,13 +95,14 @@ def delete_payslip(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(oauth2.get_current_user)
 ):
-    payslip_query = db.query(models.Payslip).filter(models.Payslip.id == id)
-    payslip = payslip_query.first()
+    payslip = get_object_or_404(db.query(models.Payslip), id, "Payslip")
 
-    if not payslip:
-        raise HTTPException(status_code=404, detail=f"Payslip with id {id} not found")
-
-    payslip_query.delete(synchronize_session=False)
+    db.delete(payslip)
     db.commit()
 
     return {"message": "Payslip deleted successfully"}
+
+
+
+
+

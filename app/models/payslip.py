@@ -46,7 +46,7 @@ class Payslip(Base):
 
     # Foreign Keys
     employee_id = Column(Integer, ForeignKey("employees.id"), nullable=False)
-    employee_salary_id = Column(Integer, ForeignKey("employee_salaries.id"), nullable=False)
+    employee_salary_id = Column(Integer, ForeignKey("employee_salaries.id"), nullable=True)
     department_id = Column(Integer, ForeignKey("departments.id"), nullable=False)
     rank_id = Column(Integer, ForeignKey("ranks.id"), nullable=False)
     created_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
