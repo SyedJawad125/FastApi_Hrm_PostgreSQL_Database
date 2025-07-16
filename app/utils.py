@@ -2,6 +2,12 @@ from fastapi import HTTPException
 from passlib.context import CryptContext
 from datetime import datetime
 from app import models
+from sqlalchemy.orm import Query
+from app import models, schemas 
+from fastapi.responses import JSONResponse
+
+ # ✅ Keep this if enums are in the same schemas file
+
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -116,12 +122,6 @@ def filter_timesheets(params, query):
 
     return query
     
-from fastapi import HTTPException
-from sqlalchemy.orm import Query
-from datetime import datetime
-
-from app import models, schemas 
- # ✅ Keep this if enums are in the same schemas file
 
 
 def filter_leave(params: dict, query: Query):
@@ -212,8 +212,68 @@ def filter_employee_salaries(params, query):
     return query
 
 
-from fastapi.responses import JSONResponse
-from app import models
+
+def filter_salary_histories(params, query: Query):
+    employee_id = params.get("employee_id")
+    department_id = params.get("department_id")
+    previous_rank_id = params.get("previous_rank_id")
+    new_rank_id = params.get("new_rank_id")
+    change_type = params.get("change_type")  # promotion, annual_raise, etc.
+    effective_date = params.get("effective_date")  # format: YYYY-MM-DD
+
+    # Filter by employee_id
+    if employee_id:
+        try:
+            query = query.filter(models.SalaryHistory.employee_id == int(employee_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid employee_id. Must be an integer.")
+
+    # Filter by department_id
+    if department_id:
+        try:
+            query = query.filter(models.SalaryHistory.department_id == int(department_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid department_id. Must be an integer.")
+
+    # Filter by previous_rank_id
+    if previous_rank_id:
+        try:
+            query = query.filter(models.SalaryHistory.previous_rank_id == int(previous_rank_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid previous_rank_id. Must be an integer.")
+
+    # Filter by new_rank_id
+    if new_rank_id:
+        try:
+            query = query.filter(models.SalaryHistory.new_rank_id == int(new_rank_id))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid new_rank_id. Must be an integer.")
+
+    # Filter by change_type
+    if change_type:
+        valid_types = [e.value for e in models.ChangeType]
+        if change_type.lower() in valid_types:
+            query = query.filter(models.SalaryHistory.change_type == change_type.lower())
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid change_type. Allowed: {valid_types}"
+            )
+
+    # Filter by effective_date
+    if effective_date:
+        try:
+            parsed_date = datetime.strptime(effective_date, "%Y-%m-%d").date()
+            query = query.filter(models.SalaryHistory.effective_date == parsed_date)
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid effective_date format. Use YYYY-MM-DD."
+            )
+
+    return query
+
+
 
 def filter_permissions(params, query):
     name = params.get("name")
@@ -222,7 +282,6 @@ def filter_permissions(params, query):
     # Add more filters as needed
     return query
 
-from fastapi.responses import JSONResponse
 
 def filter_roles(params, query):
     name = params.get("name")
